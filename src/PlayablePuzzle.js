@@ -31,7 +31,7 @@ function PlayablePuzzle(props) {
     var radius = 300; // radius of the circle
     var fields = [...props.inputArray];
     var coordArray = [];
-    var angle = 0;
+    var angle = (3 / 2 * Math.PI); // 270 degree angle to start at top
     var step = (2 * Math.PI) / fields.length;
 
     fields.forEach(() => {
@@ -140,6 +140,7 @@ function PlayablePuzzle(props) {
           );
         })}
         <div
+          className="App-logo"
           style={{
             position: "absolute",
             marginLeft: 500 - 200,

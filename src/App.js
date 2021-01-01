@@ -5,6 +5,7 @@ import PlayablePuzzle from "./PlayablePuzzle.js";
 function App() {
   const [userInput, setUserInput] = useState("");
   const [inputArray, setInputArray] = useState([]);
+  const [sizeOfPuzzle, setSizeOfPuzzle] = useState(0);
 
   const [outputArray, setOutputArray] = useState([]);
 
@@ -39,12 +40,37 @@ function App() {
       checkPath(upStepIndex, newChosenArr, [...pathArr], solutionArr);
     }
 
-    if (chosenArr[downStepIndex] === 0) {
+    if (upStepIndex !== downStepIndex && chosenArr[downStepIndex] === 0) {
       let newChosenArr = [...chosenArr];
       newChosenArr[downStepIndex] = 1;
       checkPath(downStepIndex, newChosenArr, [...pathArr], solutionArr);
     }
   };
+
+  const createPuzzle = () => {
+    // create random array
+    let randArr = [];
+    for (let i = 0; i < sizeOfPuzzle; i++) {
+      randArr.push({idx: i, rank: Math.random()});
+    }
+    // sort it
+    randArr.sort((r1, r2) => r1.rank - r2.rank);
+    randArr = randArr.map((v) => v.idx);
+    console.log(randArr);
+
+    const values = [];
+    const puzzle = Array(12);
+    for (let i = 1; i < sizeOfPuzzle; i++) {
+      let value = Math.abs(randArr[i] - randArr[i-1]);
+      value = value > sizeOfPuzzle/2 ? sizeOfPuzzle-value: value;
+      values.push(value);
+      puzzle[randArr[i-1]] = value;
+    }
+    values.push(Math.floor(Math.random() * Math.floor(sizeOfPuzzle/2)) + 1);
+    puzzle[randArr[11]] = values[11];
+    console.log(puzzle);
+    setUserInput(puzzle.toString());
+  }
 
   let solvePuzzle = () => {
     let blankArr = inputArray.map(() => {
@@ -52,7 +78,7 @@ function App() {
     });
     let solutionArr = [];
     inputArray.forEach((element, index) => {
-      checkPath(index, [...blankArr], [], solutionArr);
+      checkPath(+index, [...blankArr], [], solutionArr);
     });
     solutionArr = solutionArr.filter((currArr, currArrIndex) => {
       // next arr exists
@@ -81,6 +107,7 @@ function App() {
     <div className="App">
       <div>
         <input
+          value = {userInput}
           onChange={(e) => {
             setUserInput(e.target.value);
           }}
@@ -93,6 +120,18 @@ function App() {
           }}
         >
           Run
+        </button>
+      </div>
+      <div>
+        <input
+          onChange={(e) => {
+            setSizeOfPuzzle(e.target.value);
+          }}
+        ></input>
+        <button
+          onClick={() => createPuzzle()}
+        >
+          Generate
         </button>
       </div>
       <div>Sample puzzle 1: 5,3,1,3,5,2,4,5,1,6,2,2</div>
