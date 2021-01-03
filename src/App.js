@@ -59,7 +59,7 @@ function App() {
     console.log(randArr);
 
     const values = [];
-    const puzzle = Array(12);
+    const puzzle = Array(sizeOfPuzzle);
     for (let i = 1; i < sizeOfPuzzle; i++) {
       let value = Math.abs(randArr[i] - randArr[i-1]);
       value = value > sizeOfPuzzle/2 ? sizeOfPuzzle-value: value;
@@ -67,7 +67,7 @@ function App() {
       puzzle[randArr[i-1]] = value;
     }
     values.push(Math.floor(Math.random() * Math.floor(sizeOfPuzzle/2)) + 1);
-    puzzle[randArr[11]] = values[11];
+    puzzle[randArr[sizeOfPuzzle-1]] = values[sizeOfPuzzle-1];
     console.log(puzzle);
     setUserInput(puzzle.toString());
   }
@@ -134,22 +134,16 @@ function App() {
           Generate
         </button>
       </div>
-      <div>Sample puzzle 1: 5,3,1,3,5,2,4,5,1,6,2,2</div>
+      {/* <div>Sample puzzle 1: 5,3,1,3,5,2,4,5,1,6,2,2</div>
       <div>
         Sample puzzle: 11, 5, 1, 7, 11, 12, 8, 5, 8, 7, 15, 8, 3, 9, 9, 14, 9,
         12, 16, 3, 14, 5, 4, 3, 3, 12, 4, 13, 14, 2, 6, 16
-      </div>
+      </div> */}
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ marginRight: 50 }}>
-          {"Puzzle tiles: (" + inputArray.length + ")"}
+          {`Puzzle tiles: (${inputArray.length})`}
         </div>
-        {inputArray.map((element, index) => {
-          if (index < inputArray.length - 1) {
-            return <div>{element + " , "}</div>;
-          } else {
-            return <div>{element}</div>;
-          }
-        })}
+        {inputArray.join(", ")}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -158,16 +152,10 @@ function App() {
             return (
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <div style={{ marginRight: 50 }}>
-                  {"Puzzle Solution: (" + (solutionNum + 1) + ")"}
+                  {`Puzzle Solution: (${solutionNum + 1})`}
                 </div>
                 {solution ? (
-                  solution.map((element, index) => {
-                    if (index < inputArray.length - 1) {
-                      return <div>{element + " , "}</div>;
-                    } else {
-                      return <div>{element}</div>;
-                    }
-                  })
+                  solution.join(", ")
                 ) : (
                   <div />
                 )}
