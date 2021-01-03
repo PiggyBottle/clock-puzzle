@@ -6,12 +6,14 @@ function App() {
   const [userInput, setUserInput] = useState("");
   const [inputArray, setInputArray] = useState([]);
   const [sizeOfPuzzle, setSizeOfPuzzle] = useState(0);
+  const [showSolutions, setShowSolutions] = useState(false);
 
   const [outputArray, setOutputArray] = useState([]);
 
   useEffect(() => {
-    setInputArray(userInput.split(","));
-  }, [userInput]);
+    setOutputArray([]);
+    setOutputArray(solver(inputArray));
+  }, [inputArray]);
 
   function mod(n, m) {
     return ((n % m) + m) % m;
@@ -47,6 +49,10 @@ function App() {
     }
   };
 
+  const toggleSolutions = () => {
+    setShowSolutions(!showSolutions);
+  };
+
   const createPuzzle = () => {
     // create random array
     let randArr = [];
@@ -56,7 +62,6 @@ function App() {
     // sort it
     randArr.sort((r1, r2) => r1.rank - r2.rank);
     randArr = randArr.map((v) => v.idx);
-    console.log(randArr);
 
     const values = [];
     const puzzle = Array(sizeOfPuzzle);
@@ -68,14 +73,13 @@ function App() {
     }
     values.push(Math.floor(Math.random() * Math.floor(sizeOfPuzzle/2)) + 1);
     puzzle[randArr[sizeOfPuzzle-1]] = values[sizeOfPuzzle-1];
-    console.log(puzzle);
+    // console.log(puzzle);
     setUserInput(puzzle.toString());
-  }
+    setInputArray(puzzle);
+  };
 
-  let solvePuzzle = () => {
-    let blankArr = inputArray.map(() => {
-      return 0;
-    });
+  const solver = (inputArray) => {
+    let blankArr = inputArray.map(() => 0);
     let solutionArr = [];
     inputArray.forEach((element, index) => {
       checkPath(+index, [...blankArr], [], solutionArr);
@@ -97,10 +101,7 @@ function App() {
       }
       return unique;
     });
-
-    console.log(solutionArr);
-
-    setOutputArray(solutionArr);
+    return solutionArr;
   };
 
   return (
@@ -115,8 +116,7 @@ function App() {
         <button
           onClick={() => {
             setInputArray(userInput.split(","));
-            setOutputArray([]);
-            solvePuzzle();
+            // solvePuzzle();
           }}
         >
           Run
@@ -129,28 +129,19 @@ function App() {
           }}
         ></input>
         <button
-          onClick={() => createPuzzle()}
+          onClick={createPuzzle}
         >
           Generate
         </button>
       </div>
-      {/* <div>Sample puzzle 1: 5,3,1,3,5,2,4,5,1,6,2,2</div>
-      <div>
-        Sample puzzle: 11, 5, 1, 7, 11, 12, 8, 5, 8, 7, 15, 8, 3, 9, 9, 14, 9,
-        12, 16, 3, 14, 5, 4, 3, 3, 12, 4, 13, 14, 2, 6, 16
-      </div> */}
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ marginRight: 50 }}>
-          {`Puzzle tiles: (${inputArray.length})`}
-        </div>
-        {inputArray.join(", ")}
-      </div>
-
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {outputArray ? (
+        <button onClick={toggleSolutions} style={{width: 'max-content'}}>
+          {showSolutions ? "Hide": "Show"} Solutions
+        </button>
+        {(showSolutions && outputArray) ? (
           outputArray.map((solution, solutionNum) => {
             return (
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div key={solutionNum} style={{ display: "flex", flexDirection: "row" }}>
                 <div style={{ marginRight: 50 }}>
                   {`Puzzle Solution: (${solutionNum + 1})`}
                 </div>
