@@ -75,7 +75,7 @@ function PlayablePuzzle(props) {
               setup();
             }}
           >
-            Seetup
+            Reset
           </button>
           {selectedOrder.includes(canBeSelected[0]) &&
           selectedOrder.includes(canBeSelected[1]) &&
@@ -103,7 +103,7 @@ function PlayablePuzzle(props) {
                   alignItems: "center",
                   justifyContent: "center",
                   border:
-                    lastSelected !== undefined && lastSelected == tileIndex
+                    lastSelected !== undefined && lastSelected === tileIndex
                       ? "2px solid blue"
                       : selectedArr[tileIndex] === 1
                       ? "2px solid red"
