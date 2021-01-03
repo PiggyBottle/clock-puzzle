@@ -22,6 +22,9 @@ function PlayablePuzzle(props) {
       setSelectedOrder(newList);
     }
   }, [lastSelected]);
+  useEffect(() => {
+    setup();
+  }, [props.inputArray])
 
   function mod(n, m) {
     return ((n % m) + m) % m;
